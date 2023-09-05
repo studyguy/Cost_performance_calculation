@@ -83,7 +83,20 @@
 
             const result = (salary / (workDays * workHours * 30) * workEnvironment * interpersonalEnvironment) / educationInvestment;
 
-            document.getElementById("result").textContent = `计算结果：${result.toFixed(2)}`;
+            const resultText = `计算结果：${result.toFixed(2)}`;
+            let suggestion = "";
+
+            if (result < 0.8) {
+                suggestion = "建议马上辞职";
+            } else if (result >= 0.8 && result < 1.5) {
+                suggestion = "可以熬着，但性价比跟在快餐店打工差不多";
+            } else if (result >= 1.5 && result < 3) {
+                suggestion = "工作不错的，好好珍惜";
+            } else {
+                suggestion = "偷笑吧，别让人知道你工作这么好";
+            }
+
+            document.getElementById("result").textContent = resultText + "，" + suggestion;
         }
     </script>
 </body>
