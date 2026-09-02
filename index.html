@@ -109,6 +109,7 @@
   .logo-badge .ic svg{width:20px;height:20px;color:#fff}
   button .ic{margin-right:5px}
   button .ic svg{width:15px;height:15px}
+  .theme-btn .ic svg{width:13px;height:13px}
   .empty svg{width:44px;height:44px;display:block;margin:0 auto 10px;opacity:.7}
   .comment svg{width:15px;height:15px;vertical-align:-2px;flex:none;display:inline-block}
 
@@ -491,9 +492,15 @@ const ICONS = {
   inbox:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5h13l3.5 7v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6l3.5-7z"/></svg>',
   pointer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 6-6 2-3 6-2-7-3-1z"/><path d="M10 13l5 5"/></svg>',
 };
-// 注入 HTML 静态位置的图标
-document.querySelectorAll('[data-ic]').forEach(el=>{ el.innerHTML = ICONS[el.dataset.ic] || ''; });
-function setThemeIcon(dark){ $('themeBtn').innerHTML = ICONS[dark ? 'sun' : 'moon']; }
+// 注入 HTML 静态位置的图标（统一包一层 .ic 容器，保证 CSS 尺寸规则生效）
+document.querySelectorAll('[data-ic]').forEach(el=>{
+  const svg = ICONS[el.dataset.ic] || '';
+  el.innerHTML = el.classList.contains('ic')
+    ? svg
+    : '<span class="ic">' + svg + '</span>';
+  el.removeAttribute('data-ic');
+});
+function setThemeIcon(dark){ $('themeBtn').innerHTML = '<span class="ic">' + ICONS[dark ? 'sun' : 'moon'] + '</span>'; }
 const DIM_NAMES = ['薪资回报','时间成本','环境舒适','发展空间'];
 
 /* ============================================================
