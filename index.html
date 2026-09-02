@@ -272,7 +272,7 @@
   <section class="view on" id="view-calc">
     <div class="hero">
       <h1>工作性价比评估</h1>
-      <p>薪资 · 时长 · 环境 · 发展，四维模型量化你的工作价值</p>
+      <p>薪资 · 时间 · 环境 · 人际 · 发展 · 稳定，六维模型量化你的工作价值</p>
     </div>
 
     <div class="grid">
@@ -310,7 +310,7 @@
         </div>
 
         <div class="panel mb18">
-          <h3>⏰ 工作强度</h3>
+          <h3><span class="ic" data-ic="clock"></span>工作强度</h3>
           <div class="fields" style="margin-top:14px">
             <div class="field">
               <label>每日工作时长（小时）</label>
@@ -326,6 +326,86 @@
               <div class="range-head"><label>单程通勤时间</label><span class="range-val" id="commuteVal">40 分钟</span></div>
               <input type="range" id="commute" min="0" max="150" step="5" value="40" oninput="liveCalc()">
               <div class="tip" id="commuteTip">0 分钟 = 远程办公 / 居家，通勤成本为零</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel mb18">
+          <h3><span class="ic" data-ic="wallet"></span>收入与单位（进阶）</h3>
+          <div class="fields" style="margin-top:14px">
+            <div class="field full">
+              <label>所在城市</label>
+              <select id="city" onchange="liveCalc()">
+                <option value="一线">一线（北上广深）</option>
+                <option value="新一线">新一线（成都/杭州/武汉等）</option>
+                <option value="二线" selected>二线</option>
+                <option value="三线">三线</option>
+                <option value="四线及以下">四线及以下</option>
+              </select>
+              <div class="tip">同薪不同购买力：评分按当地生活成本折算（二线为基准）</div>
+            </div>
+            <div class="field">
+              <label>公积金比例</label>
+              <select id="fund" onchange="liveCalc()">
+                <option value="0">无公积金</option>
+                <option value="0.05">5%（低比例）</option>
+                <option value="0.07">7%（常见）</option>
+                <option value="0.12" selected>12%（足额）</option>
+              </select>
+              <div class="tip">单位同比例缴存，计入隐形收入（估算口径）</div>
+            </div>
+            <div class="field">
+              <label>年终奖 / 13薪</label>
+              <select id="bonus" onchange="liveCalc()">
+                <option value="0">无</option>
+                <option value="1" selected>1 个月（13薪）</option>
+                <option value="2">2 个月（14薪）</option>
+                <option value="3">3 个月</option>
+                <option value="6">6 个月及以上</option>
+              </select>
+              <div class="tip">按年现金收入折算到每月</div>
+            </div>
+            <div class="field">
+              <label>隐形福利（餐补/房补等）</label>
+              <select id="welfare" onchange="liveCalc()">
+                <option value="0" selected>基本没有</option>
+                <option value="500">少量（约 ¥500/月）</option>
+                <option value="1500">中等（约 ¥1500/月）</option>
+                <option value="3500">优厚（约 ¥3500/月）</option>
+              </select>
+              <div class="tip">餐补/交通/房补/班车等折算</div>
+            </div>
+            <div class="field">
+              <label>加班回报</label>
+              <select id="overtime" onchange="liveCalc()">
+                <option value="1" selected>标准工时 / 依法给加班费或调休</option>
+                <option value="0.93">偶尔无偿加班</option>
+                <option value="0.84">经常无偿加班</option>
+                <option value="0.72">996 式无偿加班</option>
+              </select>
+              <div class="tip">劳动法加班费 1.5-3 倍，无偿加班 = 时薪隐性打折</div>
+            </div>
+            <div class="field">
+              <label>单位类型</label>
+              <select id="company" onchange="liveCalc()">
+                <option value="体制内央国企">体制内 / 央国企</option>
+                <option value="大厂外企" selected>大厂 / 外企</option>
+                <option value="中型企业">中型企业</option>
+                <option value="中小企业">中小企业</option>
+                <option value="外包派遣">外包 / 劳务派遣</option>
+                <option value="创业自由职业">创业 / 自由职业</option>
+              </select>
+              <div class="tip">编制与平台规模 → 职业稳定性</div>
+            </div>
+            <div class="field">
+              <label>年假天数</label>
+              <select id="leave" onchange="liveCalc()">
+                <option value="5">5 天（法定底线）</option>
+                <option value="10" selected>10 天</option>
+                <option value="15">15 天</option>
+                <option value="20">20 天以上</option>
+              </select>
+              <div class="tip">法定 5 天起，超出部分算公司福利</div>
             </div>
           </div>
         </div>
@@ -373,16 +453,20 @@
             <span class="bignum" id="bigNum">0.00</span>
             <span class="unit">分</span>
           </div>
-          <div class="metric-strip" style="grid-template-columns:repeat(3,1fr)">
+          <div class="metric-strip">
             <div class="metric"><b id="m-hours">0</b><span>月工时(h)</span></div>
-            <div class="metric"><b id="m-wage">0</b><span>时薪(元)</span></div>
-            <div class="metric"><b id="m-day">0</b><span>日薪(元)</span></div>
+            <div class="metric"><b id="m-wage">0</b><span>名义时薪(元)</span></div>
+            <div class="metric"><b id="m-day">0</b><span>名义日薪(元)</span></div>
+            <div class="metric"><b id="m-take">0</b><span>到手月薪(元)</span></div>
+            <div class="metric"><b id="m-real">0</b><span>综合月入(元)</span></div>
+            <div class="metric"><b id="m-annual">0</b><span>年收入(元)</span></div>
           </div>
+          <div class="tip" style="margin-top:6px;text-align:center">到手=扣社保个税后现金 · 综合月入=到手+单位公积金 · 时薪为名义口径</div>
           <div class="comment" id="comment">填写左侧信息，实时查看评估结果</div>
         </div>
 
         <div class="chart-box" style="margin-top:18px">
-          <h3>四维雷达图</h3>
+          <h3>六维雷达图</h3>
           <canvas id="radar" width="480" height="360"></canvas>
         </div>
 
@@ -452,15 +536,51 @@
 
 <script>
 /* ============================================================
+ * 模型常量（定义于最前：启动迁移 normRec 会立即引用）
+ * ============================================================ */
+const DIM_NAMES = ['薪资回报','时间成本','物质环境','人际氛围','发展空间','职业稳定'];
+const DIM_W = [0.34, 0.18, 0.08, 0.12, 0.14, 0.14];   // 六维权重（合计 1.0）
+// 城市生活成本指数（二线=1.0 基准；依据城镇居民消费支出统计与房租比价，一线高约 30-40%）
+const CITY_IDX = {'一线':1.32, '新一线':1.15, '二线':1, '三线':0.88, '四线及以下':0.75};
+// 单位类型 → 职业稳定分（编制/平台规模对失业风险与收入预期的影响）
+const COMPANY_SCORE = {'体制内央国企':92, '大厂外企':85, '中型企业':70, '中小企业':56, '外包派遣':42, '创业自由职业':45};
+
+/* ============================================================
  * 数据模型
  *  record = {
  *    id, name, ts,
  *    salary, hours, days, commute, env, rel, growth, edu, years,
- *    score, grade, dims:[金钱,强度,环境,发展]
+ *    score, grade, dims:[六维子分]
  *  }
  * ============================================================ */
 const LS_KEY = 'job_records_v1';
+// 档案规范化：v3 六维模型对旧存档（4 维 dims / 缺进阶字段）做无损重算迁移
+// record 存有全部原始输入，calcScore 可随时重算；页面启动发现旧格式时迁移并写回一次
+function normRec(rec){
+  if(!rec || typeof rec !== 'object') return rec;
+  if(Array.isArray(rec.dims) && rec.dims.length >= 6) return rec;
+  try{
+    const r = calcScore(rec);
+    return Object.assign({}, rec, {
+      dims: r.dims.map(v=>+v.toFixed(1)),
+      score: +r.score.toFixed(2), grade: r.grade.label,
+      takeHome: Math.round(r.takeHomeMonthly),
+      realInc: Math.round(r.realMonthly),
+      annual: Math.round(r.annualIncome),
+      city: rec.city || '二线', fund: rec.fund ?? 0.12, bonus: rec.bonus ?? 1,
+      welfare: rec.welfare || 0, overtime: rec.overtime || 1,
+      company: rec.company || '大厂外企', leave: rec.leave || 10
+    });
+  }catch(e){
+    const d = rec.dims || [];
+    return Object.assign({}, rec, { dims:[d[0]||0, d[1]||0, d[2]||0, d[3]||0, 0, 0] });
+  }
+}
 let records = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+if(records.some(r => !Array.isArray(r.dims) || r.dims.length < 6)){
+  records = records.map(normRec);
+  localStorage.setItem(LS_KEY, JSON.stringify(records));   // 一次性迁移旧档案
+}
 let checkedSet = new Set();
 
 const COLORS = ['#4A6CF7','#10B981','#F59E0B','#8B5CF6','#EF4444'];
@@ -491,6 +611,8 @@ const ICONS = {
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 5-5"/></svg>',
   inbox:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5h13l3.5 7v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6l3.5-7z"/></svg>',
   pointer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 6-6 2-3 6-2-7-3-1z"/><path d="M10 13l5 5"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+  wallet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H5a2 2 0 0 1 0-4h13v4"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1"/><path d="M16 13.5h.01"/></svg>',
 };
 // 注入 HTML 静态位置的图标（统一包一层 .ic 容器，保证 CSS 尺寸规则生效）
 document.querySelectorAll('[data-ic]').forEach(el=>{
@@ -501,7 +623,6 @@ document.querySelectorAll('[data-ic]').forEach(el=>{
   el.removeAttribute('data-ic');
 });
 function setThemeIcon(dark){ $('themeBtn').innerHTML = '<span class="ic">' + ICONS[dark ? 'sun' : 'moon'] + '</span>'; }
-const DIM_NAMES = ['薪资回报','时间成本','环境舒适','发展空间'];
 
 /* ============================================================
  * 工具
@@ -555,44 +676,78 @@ function switchView(v){
 }
 
 /* ============================================================
- * 评分引擎
+ * 评分引擎（六维 v3）
  *
- * score = ( 时薪分×40% + 时间回报×22% + 环境舒适×20% + 发展空间×18% )
- *         ÷ ( 教育期望系数 × 年限期望系数 )
- * 四维子分：薪资回报 / 时间成本 / 环境舒适 / 发展空间
+ * score = Σ( 六维子分 × 权重 ) ÷ ( 教育期望系数 × 年限期望系数 )
+ * 六维：薪资回报 / 时间成本 / 物质环境 / 人际氛围 / 发展空间 / 职业稳定
+ *
+ * 收入口径（估算，UI 已注明）：
+ *   到手年现金 = 名义年现金(工资+年终+福利) − 个人五险一金 − 简化个税
+ *   综合月入   = (到手年现金 + 单位公积金) / 12   —— HR 谈薪"现金+公积金"口径
+ *   购买力时薪 = 综合月入 ÷ 城市生活成本指数 ÷ 月工时
  * ============================================================ */
+// 简化年度个税：综合所得，减除 6 万，3%~35% 速算（忽略专项附加）
+function taxOf(annualTaxable){
+  if(annualTaxable <= 0) return 0;
+  if(annualTaxable <= 36000) return annualTaxable*0.03;
+  if(annualTaxable <= 144000) return annualTaxable*0.1 - 2520;
+  if(annualTaxable <= 300000) return annualTaxable*0.2 - 16920;
+  if(annualTaxable <= 420000) return annualTaxable*0.25 - 31920;
+  if(annualTaxable <= 660000) return annualTaxable*0.3 - 52920;
+  return annualTaxable*0.35 - 85920;
+}
 function calcScore(i){
   const monthlyHours = i.hours * i.days * 4.33;
-  const hourlyWage   = i.hours > 0 ? i.salary / monthlyHours : 0;
+  const nominalHourly = i.hours > 0 ? i.salary / monthlyHours : 0;   // 名义时薪（仅展示）
 
-  // ① 薪资回报：时薪对数曲线（40元/时≈65分基准，时薪翻倍≈+17分；120封顶防无脑拉分）
-  //    不再在低分位封顶——以前时薪超40元/时（约月薪6.9k）就100分，改薪资毫无反馈
-  const baseTimeWage = 40;
-  let payScore = hourlyWage > 0
-    ? Math.max(5, Math.min(120, 65 + 24 * Math.log(hourlyWage / baseTimeWage)))
+  // ① 薪资回报：真实收入 → 购买力时薪 → 对数曲线
+  const fund  = i.fund ?? 0.12;                 // 公积金比例（旧档案缺省按 12% 足额口径）
+  const bonus = i.bonus ?? 1;                   // 年终奖月数（旧档案缺省按 13 薪口径）
+  const ssFund  = 0.105 + fund;                 // 个人五险一金比例（社保 10.5% + 公积金）
+  const welfareAnnual = (i.welfare || 0) * 12;  // 福利现金补贴年化
+  const grossAnnual   = i.salary * (12 + bonus) + welfareAnnual;   // 名义年现金
+  const personalPay   = i.salary * 12 * ssFund; // 年度个人缴存（以工资为基数）
+  const taxable       = Math.max(0, grossAnnual - personalPay - 60000);     // 减除 6 万后计税
+  const tax           = taxOf(taxable);
+  const takeHomeAnnual = grossAnnual - personalPay - tax;                  // 到手年现金（税后）
+  const annualIncome   = takeHomeAnnual;                                   // 年现金收入（展示）
+  const realAnnual   = takeHomeAnnual + i.salary * 12 * fund;              // + 单位公积金（隐形收入）
+  const realMonthly  = realAnnual / 12;
+  const cityIdx      = CITY_IDX[i.city] || 1;                              // 旧档案无 city → 按二线
+  const hourlyPurch  = realMonthly / cityIdx / (monthlyHours || 1);        // 购买力时薪
+  const payScore = hourlyPurch > 0
+    ? Math.max(5, Math.min(120, 65 + 24 * Math.log(hourlyPurch / 40)))
     : 5;
 
-  // ② 时间成本：通勤与工时占用 → 折算为"时间回报"得分
-  const commuteHours = i.commute * 2 / 60;               // 单日通勤
-  const totalOccupied = i.hours + commuteHours;          // 单日总占用
-  const idealOccupied = 9;                               // 8h 工作 + 1h 通勤
-  let timeScore = Math.max(5, Math.min(100, idealOccupied / totalOccupied * 100));
+  // ② 时间成本：工时+通勤占用 × 年假修正 × 加班回报修正
+  const occupied   = i.hours + i.commute * 2 / 60;       // 单日总占用
+  const timeBase   = Math.max(5, Math.min(100, 9 / occupied * 100));       // 理想占用 9h（8h 工作+1h 通勤）
+  const leaveDays  = i.leave || 10;                      // 旧档案默认 10 天
+  const leaveF     = 245 / (250 - leaveDays);            // 年假修正：年假越多有效工作年越短（250 工作日基数）
+  const otF        = i.overtime || 1;                    // 无偿加班 = 强度无补偿（劳动法加班费 1.5-3 倍）
+  const timeScore  = Math.max(5, Math.min(100, timeBase * leaveF * otF));
 
-  // ③ 环境舒适：物理环境 × 人际氛围
-  let envScore = i.env * i.rel * 100;
+  // ③ 物质环境（物理工作环境） / ④ 人际氛围 —— 原合并维度拆分，各自成轴
+  const materialScore = Math.min(100, (i.env || 1) * 100);
+  const peopleScore   = Math.min(100, (i.rel || 1) * 100);
 
-  // ④ 发展空间：晋升潜力（年限因素移至期望系数，避免重复计算）
-  const growthScore = Math.min(100, i.growth * 10);
+  // ⑤ 发展空间：晋升潜力
+  const growthScore = Math.min(100, (i.growth || 5) * 10);
 
-  const dims = [payScore, timeScore, envScore, growthScore];
+  // ⑥ 职业稳定：单位类型
+  const stbScore = COMPANY_SCORE[i.company] ?? 85;
 
-  // 综合 = 加权四维 ÷（教育期望 × 年限期望）
+  const dims = [payScore, timeScore, materialScore, peopleScore, growthScore, stbScore];
+
+  // 综合 = 加权六维 ÷（教育期望 × 年限期望）
   // 学历/年限越高，对同样薪资的"心理价位"越高，性价比越难拿高分
   const yearCoef = {1:0.95, 3:1.0, 5:1.05, 8:1.12, 12:1.2}[i.years] || 1;
-  const weighted = dims[0]*0.40 + dims[1]*0.22 + dims[2]*0.20 + dims[3]*0.18;
-  const score = weighted / (i.edu * yearCoef);
+  let weighted = 0;
+  dims.forEach((v,k)=> weighted += v * DIM_W[k]);
+  const score = weighted / ((i.edu || 1) * yearCoef);
   const grade = getGrade(score);
-  return { score, grade, dims, hourlyWage, monthlyHours };
+  return { score, grade, dims, monthlyHours, nominalHourly, realMonthly,
+           takeHomeMonthly: takeHomeAnnual/12, hourlyPurch, annualIncome };
 }
 
 /* 等级体系 */
@@ -630,7 +785,7 @@ function liveCalc(){
   if(!i.salary){
     $('bigNum').textContent = '0.00';
     $('grade').textContent = '—'; $('grade').className = 'grade';
-    $('m-hours').textContent='0'; $('m-wage').textContent='0'; $('m-day').textContent='0';
+    ['m-hours','m-wage','m-day','m-take','m-real','m-annual'].forEach(id=>$(id).textContent='0');
     $('comment').textContent = '继续补充右侧信息即可实时评估';
     drawRadar(); return;
   }
@@ -639,8 +794,11 @@ function liveCalc(){
   $('grade').textContent = r.grade.label;
   $('grade').className = 'grade ' + r.grade.cls;
   $('m-hours').textContent = Math.round(i.hours*i.days*4.33);
-  $('m-wage').textContent = r.hourlyWage.toFixed(0);
-  $('m-day').textContent = Math.round(i.salary/i.days/1) ;
+  $('m-wage').textContent = r.nominalHourly.toFixed(0);
+  $('m-day').textContent = Math.round(i.salary/i.days);
+  $('m-take').textContent = Math.round(r.takeHomeMonthly);
+  $('m-real').textContent = Math.round(r.realMonthly);
+  $('m-annual').textContent = Math.round(r.annualIncome);
   $('comment').innerHTML = buildCommentHTML(r.score);
   drawRadar(r.dims);
 }
@@ -654,7 +812,15 @@ function readInput(){
     rel:+$('rel').value,
     growth:+$('growth').value,
     edu:+$('edu').value,
-    years:+$('years').value
+    years:+$('years').value,
+    // 进阶参数（select 均有默认值；用 ?? 兜底保证旧档案/缺省可算）
+    city:$('city').value || '二线',
+    fund:+$('fund').value || 0,
+    bonus:+$('bonus').value || 0,
+    welfare:+$('welfare').value || 0,
+    overtime:+$('overtime').value || 1,
+    company:$('company').value || '大厂外企',
+    leave:+$('leave').value || 10
   };
 }
 function buildCommentHTML(score){
@@ -680,7 +846,10 @@ function doSave(){
   records.push({
     id: Date.now(), name, ts: Date.now(),
     ...i, score: +r.score.toFixed(2), grade: r.grade.label,
-    dims: r.dims.map(v=>+v.toFixed(1))
+    dims: r.dims.map(v=>+v.toFixed(1)),
+    takeHome: Math.round(r.takeHomeMonthly),
+    realInc: Math.round(r.realMonthly),
+    annual: Math.round(r.annualIncome)
   });
   localStorage.setItem(LS_KEY, JSON.stringify(records));
   closeSave(); $('profName').value='';
@@ -756,8 +925,8 @@ function drawRadar(dims){
   // 网格
   for(let ring=1; ring<=4; ring++){
     ctx.beginPath();
-    for(let k=0;k<4;k++){
-      const a = -Math.PI/2 + k*Math.PI/2;
+    for(let k=0;k<6;k++){
+      const a = -Math.PI/2 + k*Math.PI/3;
       const x = cx + Math.cos(a)*R*ring/4, y = cy + Math.sin(a)*R*ring/4;
       k===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
     }
@@ -765,8 +934,8 @@ function drawRadar(dims){
     ctx.strokeStyle = gridCol; ctx.lineWidth = ring===4?1.6:1; ctx.stroke();
   }
   // 轴
-  for(let k=0;k<4;k++){
-    const a = -Math.PI/2 + k*Math.PI/2;
+  for(let k=0;k<6;k++){
+    const a = -Math.PI/2 + k*Math.PI/3;
     ctx.beginPath(); ctx.moveTo(cx,cy);
     ctx.lineTo(cx+Math.cos(a)*R, cy+Math.sin(a)*R);
     ctx.strokeStyle = gridCol; ctx.stroke();
@@ -779,7 +948,7 @@ function drawRadar(dims){
   // 数据多边形
   ctx.beginPath();
   dims.forEach((v,k)=>{
-    const a = -Math.PI/2 + k*Math.PI/2;
+    const a = -Math.PI/2 + k*Math.PI/3;
     const x = cx+Math.cos(a)*R*v/100, y = cy+Math.sin(a)*R*v/100;
     k===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
   });
@@ -787,7 +956,7 @@ function drawRadar(dims){
   ctx.fillStyle='rgba(74,108,247,.24)'; ctx.fill();
   ctx.strokeStyle='#4A6CF7'; ctx.lineWidth=2.5; ctx.stroke();
   dims.forEach((v,k)=>{
-    const a = -Math.PI/2 + k*Math.PI/2;
+    const a = -Math.PI/2 + k*Math.PI/3;
     const x = cx+Math.cos(a)*R*v/100, y = cy+Math.sin(a)*R*v/100;
     ctx.beginPath(); ctx.arc(x,y,4.5,0,Math.PI*2);
     ctx.fillStyle='#4A6CF7'; ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=1.6; ctx.stroke();
@@ -805,15 +974,15 @@ function drawCompare(){
 
   for(let ring=1;ring<=4;ring++){
     ctx.beginPath();
-    for(let k=0;k<4;k++){
-      const a=-Math.PI/2+k*Math.PI/2;
+    for(let k=0;k<6;k++){
+      const a = -Math.PI/2 + k*Math.PI/3;
       const x=cx+Math.cos(a)*R*ring/4, y=cy+Math.sin(a)*R*ring/4;
       k===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
     }
     ctx.closePath(); ctx.strokeStyle=gridCol; ctx.lineWidth=ring===4?1.6:1; ctx.stroke();
   }
-  for(let k=0;k<4;k++){
-    const a=-Math.PI/2+k*Math.PI/2;
+  for(let k=0;k<6;k++){
+    const a = -Math.PI/2 + k*Math.PI/3;
     ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);
     ctx.strokeStyle=gridCol;ctx.stroke();
     ctx.fillStyle=isDark?'#A3ACBE':'#6B7280';ctx.font='600 13px sans-serif';ctx.textAlign='center';
@@ -824,7 +993,7 @@ function drawCompare(){
     const dims = rec.dims.map(v=>Math.min(100,v));
     ctx.beginPath();
     dims.forEach((v,k)=>{
-      const a=-Math.PI/2+k*Math.PI/2;
+      const a = -Math.PI/2 + k*Math.PI/3;
       const x=cx+Math.cos(a)*R*v/100, y=cy+Math.sin(a)*R*v/100;
       k===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
     });
@@ -832,7 +1001,7 @@ function drawCompare(){
     ctx.fillStyle = color+'2E'; ctx.fill();
     ctx.strokeStyle=color; ctx.lineWidth=2.2; ctx.stroke();
     dims.forEach((v,k)=>{
-      const a=-Math.PI/2+k*Math.PI/2;
+      const a = -Math.PI/2 + k*Math.PI/3;
       const x=cx+Math.cos(a)*R*v/100, y=cy+Math.sin(a)*R*v/100;
       ctx.beginPath();ctx.arc(x,y,3.6,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
     });
@@ -854,17 +1023,21 @@ function renderCmpTable(sel){
       ${sel.slice(0,5).map(r=>`<th style="padding:8px;text-align:right;font-size:12.5px">${r.name}</th>`).join('')}
     </tr></thead><tbody>`;
   const rows = [
-    ['综合评分', r=>`<b>${r.score.toFixed(2)}</b>`],
+    ['综合评分', r=>`<b>${(+r.score).toFixed(2)}</b>`],
     ['等级', r=>r.grade],
-    ['月薪(元)', r=>r.salary],
+    ['名义月薪(元)', r=>r.salary],
+    ['到手月薪(元)', r=>r.takeHome ?? '—'],
+    ['年收入(元)', r=>r.annual ?? '—'],
+    ['所在城市', r=>r.city || '二线'],
     ['月工时(h)', r=>Math.round(r.hours*r.days*4.33)],
-    ['日薪(元)', r=>Math.round(r.salary/r.days)],
-    ['时薪(元)', r=>(r.salary/(r.hours*r.days*4.33)).toFixed(1)],
+    ['名义时薪(元)', r=>(r.salary/(r.hours*r.days*4.33)).toFixed(1)],
     ['通勤(分钟)', r=>r.commute*2],
     ['薪资回报', r=>r.dims[0]],
     ['时间成本', r=>r.dims[1]],
-    ['环境舒适', r=>r.dims[2]],
-    ['发展空间', r=>r.dims[3]],
+    ['物质环境', r=>r.dims[2]],
+    ['人际氛围', r=>r.dims[3]],
+    ['发展空间', r=>r.dims[4]],
+    ['职业稳定', r=>r.dims[5]],
   ];
   rows.forEach(([label,fn])=>{
     html += `<tr><td style="padding:8px;color:var(--ink-2)">${label}</td>`;
