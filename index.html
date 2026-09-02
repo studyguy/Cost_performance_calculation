@@ -82,6 +82,9 @@
   .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;margin-top:16px}
   .fields .full{grid-column:1/-1}
   .field label{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+  .range-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .range-head label{margin-bottom:0}
+  .range-val{font-size:13px;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums}
   .field input,.field select{
     width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;
     font-size:15px;background:var(--card);color:var(--ink);
@@ -310,7 +313,7 @@
               <div class="tip">大小周按周折算</div>
             </div>
             <div class="field full">
-              <label>单程通勤时间（分钟）</label>
+              <div class="range-head"><label>单程通勤时间</label><span class="range-val" id="commuteVal">40 分钟</span></div>
               <input type="range" id="commute" min="0" max="150" step="5" value="40" oninput="liveCalc()">
               <div class="tip">0 分钟 = 远程办公 / 居家</div>
             </div>
@@ -341,7 +344,7 @@
               </select>
             </div>
             <div class="field full">
-              <label>晋升发展空间</label>
+              <div class="range-head"><label>晋升发展空间</label><span class="range-val" id="growthVal">5 / 10</span></div>
               <input type="range" id="growth" min="1" max="10" step="1" value="5" oninput="liveCalc()">
               <div class="tip">1 = 一眼望到头　10 = 上升通道畅通</div>
             </div>
@@ -555,7 +558,13 @@ function getGrade(s){
 /* ============================================================
  * 实时计算渲染
  * ============================================================ */
+function syncRangeVals(){
+  const c = +$('commute').value;
+  $('commuteVal').textContent = c === 0 ? '远程 🏠' : c + ' 分钟';
+  $('growthVal').textContent = $('growth').value + ' / 10';
+}
 function liveCalc(){
+  syncRangeVals();
   const i = readInput();
   if(!i.salary){
     $('bigNum').textContent = '0.00';
