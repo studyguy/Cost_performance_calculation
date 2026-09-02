@@ -315,7 +315,7 @@
             <div class="field full">
               <div class="range-head"><label>单程通勤时间</label><span class="range-val" id="commuteVal">40 分钟</span></div>
               <input type="range" id="commute" min="0" max="150" step="5" value="40" oninput="liveCalc()">
-              <div class="tip">0 分钟 = 远程办公 / 居家</div>
+              <div class="tip" id="commuteTip">🏠 0 分钟 = 远程办公 / 居家，通勤成本为零</div>
             </div>
           </div>
         </div>
@@ -558,10 +558,20 @@ function getGrade(s){
 /* ============================================================
  * 实时计算渲染
  * ============================================================ */
+function commuteTipText(c){
+  if(c === 0) return '🏠 0 分钟 = 远程办公 / 居家，通勤成本为零';
+  const daily = c * 2;                                   // 每天来回分钟
+  const h = daily % 60 === 0 ? (daily/60) : (daily/60).toFixed(1);
+  if(c <= 30) return `🚶 通勤很轻：来回 ${daily} 分钟/天，几乎无感`;
+  if(c <= 60) return `🚇 标准通勤：来回 ${daily} 分钟/天（约 ${h} 小时）`;
+  if(c <= 105) return `😮‍💨 通勤偏长：来回 ${daily} 分钟/天，正在啃噬你的生活`;
+  return `🫠 极端通勤：来回 ${daily} 分钟/天，建议搬家或跑路`;
+}
 function syncRangeVals(){
   const c = +$('commute').value;
   $('commuteVal').textContent = c === 0 ? '远程 🏠' : c + ' 分钟';
   $('growthVal').textContent = $('growth').value + ' / 10';
+  $('commuteTip').textContent = commuteTipText(c);
 }
 function liveCalc(){
   syncRangeVals();
